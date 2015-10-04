@@ -36,6 +36,12 @@ angular.module('jsNgWithFirebaseApp')
       });
     });
 
+    messagesRef.on('child_removed', function(snapshot) {
+      $timeout(function() { // $timeout used instead of $digest/$apply
+        deleteMessageByName(snapshot.name());
+      });
+    });
+
     function getSnapshotsMessage(snapshot){
       var value = snapshot.val();
       return {
@@ -50,6 +56,15 @@ angular.module('jsNgWithFirebaseApp')
         var currentMessage = $scope.messages[i];
         if(name === currentMessage.name) {
           return currentMessage;
+        }
+      }
+    }
+    function deleteMessageByName(name) {
+      for(var i = 0; i < $scope.messages.length; i++) {
+        var currentMessage = $scope.messages[i];
+        if(name === currentMessage.name) {
+          $scope.messages.splice(i, 1);
+          return;
         }
       }
     }
