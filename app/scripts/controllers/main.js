@@ -11,39 +11,22 @@
 angular.module('jsNgWithFirebaseApp')
   .controller('MainCtrl', function ($scope, $timeout) {
     var rootRef = new Firebase('https://intense-torch-8090.firebaseio.com/');
-    var messageRef = rootRef.child('message');
+    var messagesRef = rootRef.child('messages');
 
-    messageRef.on('value', function(snapshot) {
+    $scope.currentUser = null;
+    $scope.currentText = null;
+
+    messagesRef.on('value', function(snapshot) {
       $timeout(function() { // $timeout used instead of $digest/$apply
         var value = snapshot.val();
-        console.log('value on change: ', value);
-        $scope.message = value;
+        $scope.messages = value;
       });
     });
 
-    $scope.$watch('message.text', function(newValue) {
-      if(!newValue) {
-        return;
-      }
-      messageRef.update({
-        text: newValue
-      })
-    });
-
-    $scope.setMessage = function() {
-      messageRef.set({
-        user: 'VVS',
-        text: 'Hi!'
-      })
-    };
-
-    $scope.updateMessage = function() {
-      messageRef.update({
-        text: 'Bye'
+    $scope.sendMessage = function() {
+      messagesRef.push({
+        user: $scope.currentUser,
+        text: $scope.currentText
       });
     };
-
-    $scope.deleteMessage = function() {
-      messageRef.remove();
-    }
   });
