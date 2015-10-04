@@ -38,6 +38,11 @@ angular
         controller: 'LoginCtrl',
         controllerAs: 'login'
       })
+      .when('/logout', {
+        template: 'Loggin out',
+        controller: 'LogoutCtrl',
+        controllerAs: 'logout'
+      })
       .when('/register', {
         templateUrl: 'views/register.html',
         controller: 'RegisterCtrl',

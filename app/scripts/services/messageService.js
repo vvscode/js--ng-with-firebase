@@ -10,7 +10,7 @@
         messageRef.startAt().limit(limitNumber).on('child_added', function (snapshot) {
           var val = snapshot.val();
           cb.call(this, {
-            user: val.user,
+            email: val.email,
             text: val.text,
             name: snapshot.name()
           });

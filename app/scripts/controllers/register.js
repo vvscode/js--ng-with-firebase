@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('jsNgWithFirebaseApp')
-    .controller('RegisterCtrl', function ($scope, $firebaseSimpleLogin, FBURL, $window) {
+    .controller('RegisterCtrl', function ($scope, $firebaseSimpleLogin, FBURL, $window, $rootScope) {
       var fbRef = new Firebase(FBURL);
       $scope.errors = [];
       $scope.simpleLogin = $firebaseSimpleLogin(fbRef);
@@ -33,9 +33,10 @@
         $scope.simpleLogin
           .$createUser($scope.registerUser.email, $scope.registerUser.password)
           .then(function(user){
+            $rootScope.user = user;
             $window.location.href = '/#/home'
           }, function(error) {
-
+            errors.push(error.message);
           });
       }
     });

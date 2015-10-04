@@ -15,7 +15,7 @@
 
       $scope.sendMessage = function () {
         var newMessage = {
-          user: $scope.currentUser,
+          email: $scope.user.email,
           text: $scope.currentText
         };
 
