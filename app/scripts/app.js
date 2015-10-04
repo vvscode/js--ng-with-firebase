@@ -28,6 +28,21 @@ angular
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
+      .when('/chat', {
+        templateUrl: 'views/chat.html',
+        controller: 'ChatCtrl',
+        controllerAs: 'chat'
+      })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl',
+        controllerAs: 'login'
+      })
+      .when('/register', {
+        templateUrl: 'views/register.html',
+        controller: 'RegisterCtrl',
+        controllerAs: 'register'
+      })
       .otherwise({
         redirectTo: '/'
       });

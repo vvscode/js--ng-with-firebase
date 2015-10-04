@@ -2,7 +2,8 @@
   'use strict';
 
   angular.module('jsNgWithFirebaseApp')
-    .controller('MainCtrl', function ($scope) {
+    .controller('RegisterCtrl', function ($scope) {
 
     });
 })(window.angular);
+
