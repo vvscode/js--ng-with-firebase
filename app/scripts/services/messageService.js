@@ -15,8 +15,8 @@
     }
 
     return {
-      childAdded: function childAdded(cb) {
-        messagesRef.on('child_added', function(snapshot){
+      childAdded: function childAdded(limitNumber, cb) {
+        messagesRef.limit(limitNumber).on('child_added', function(snapshot){
           cb.call(this, getSnapshotsMessage(snapshot));
         });
       },

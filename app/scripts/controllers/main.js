@@ -13,7 +13,7 @@ angular.module('jsNgWithFirebaseApp')
     $scope.currentUser = null;
     $scope.currentText = null;
 
-    MessageService.childAdded(function(addedMessage) {
+    MessageService.childAdded(3, function(addedMessage) {
       $timeout(function() { // $timeout used instead of $digest/$apply
         $scope.messages.push(addedMessage);
       });
