@@ -41,10 +41,10 @@
             <ul class="nav navbar-nav">
               <li><a ng-href="#/">Home</a></li>
               <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/chat">Chat</a></li>
-              <li><a ng-href="#/login">Login</a></li>
-              <li><a ng-href="#/register">Register</a></li>
-              <li><a ng-href="#/logout">Logout</a></li>
+              <li><a ng-show-auth='login'ng-href="#/chat">Chat</a></li>
+              <li><a ng-show-auth='logout' ng-href="#/login">Login</a></li>
+              <li><a ng-show-auth='logout' ng-href="#/register">Register</a></li>
+              <li><a ng-show-auth='login' ng-href="#/logout">Logout</a></li>
             </ul>
           </div>
         </div>
@@ -89,6 +89,8 @@
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="lib/routeSecurity.js"></script>
+        <script src="lib/module.simpleLoginTools.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>

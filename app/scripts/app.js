@@ -14,7 +14,9 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'firebase'
+    'firebase',
+    'routeSecurity',
+    'simpleLoginTools'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -31,7 +33,8 @@ angular
       .when('/chat', {
         templateUrl: 'views/chat.html',
         controller: 'ChatCtrl',
-        controllerAs: 'chat'
+        controllerAs: 'chat',
+        authRequired: true
       })
       .when('/login', {
         templateUrl: 'views/login.html',
@@ -52,4 +55,5 @@ angular
         redirectTo: '/'
       });
   })
-  .constant('FBURL', 'https://intense-torch-8090.firebaseio.com/');
+  .constant('FBURL', 'https://intense-torch-8090.firebaseio.com/')
+  .constant('loginRedirectPath', '/login');
