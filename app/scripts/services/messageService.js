@@ -2,7 +2,7 @@
 (function(angular) {
   'use strict';
 
-  angular.module('jsNgWithFirebaseApp').service('MessageService', function(FBURL) {
+  angular.module('jsNgWithFirebaseApp').service('MessageService', function(FBURL, $q) {
     var messagesRef = new Firebase(FBURL).child('messages');
 
     function getSnapshotsMessage(snapshot){
@@ -16,7 +16,7 @@
 
     return {
       childAdded: function childAdded(limitNumber, cb) {
-        messagesRef.limit(limitNumber).on('child_added', function(snapshot){
+        messagesRef.startAt().limit(limitNumber).on('child_added', function(snapshot){
           cb.call(this, getSnapshotsMessage(snapshot));
         });
       },
@@ -39,6 +39,34 @@
 
       off: function() {
         messagesRef.off();
+      },
+
+      pageNext: function pageNext(name, numberOfItems) {
+        var deferred = $q.defer();
+        var messages = [];
+
+        messagesRef.startAt(null, name).limit(numberOfItems).once('value', function(snapshot) {
+          snapshot.forEach(function(item) {
+            messages.push(getSnapshotsMessage(item));
+          });
+          deferred.resolve(messages);
+        });
+
+        return deferred.promise;
+      },
+
+      pageBack: function pageBack(name, numberOfItems) {
+        var deferred = $q.defer();
+        var messages = [];
+
+        messagesRef.endAt(null, name).limit(numberOfItems).once('value', function(snapshot) {
+          snapshot.forEach(function(item) {
+            messages.push(getSnapshotsMessage(item));
+          });
+          deferred.resolve(messages);
+        });
+
+        return deferred.promise;
       }
     };
   });
