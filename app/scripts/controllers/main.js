@@ -12,10 +12,18 @@ angular.module('jsNgWithFirebaseApp')
   .controller('MainCtrl', function ($scope, $timeout) {
     var rootRef = new Firebase('https://intense-torch-8090.firebaseio.com/');
     var messagesRef = rootRef.child('messages');
+    var titleRef = rootRef.child('title');
 
+    $scope.title = null;
     $scope.messages = [];
     $scope.currentUser = null;
     $scope.currentText = null;
+
+    titleRef.once('value', function(snapshot){
+      $timeout(function(){
+        $scope.title = snapshot.val();
+      });
+    });
 
     messagesRef.on('child_added', function(snapshot) {
       $timeout(function() { // $timeout used instead of $digest/$apply
@@ -74,5 +82,9 @@ angular.module('jsNgWithFirebaseApp')
         user: $scope.currentUser,
         text: $scope.currentText
       });
+    };
+
+    $scope.turnFeedOff = function() {
+      messagesRef.off();
     };
   });
