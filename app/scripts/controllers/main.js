@@ -1,82 +1,43 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name jsNgWithFirebaseApp.controller:MainCtrl
- * @description
- * # MainCtrl
- * Controller of the jsNgWithFirebaseApp
- */
 angular.module('jsNgWithFirebaseApp')
   .controller('MainCtrl', function ($scope, $timeout, MessageService) {
-    $scope.messages = [];
+
     $scope.currentUser = null;
     $scope.currentText = null;
+    $scope.messages = [];
 
-    MessageService.childAdded(3, function(addedMessage) {
-      $timeout(function() { // $timeout used instead of $digest/$apply
-        $scope.messages.push(addedMessage);
+    MessageService.childAdded(10, function (addedChild) {
+      $timeout(function () {
+        $scope.messages.push(addedChild);
       });
     });
 
-    MessageService.childChanged(function(changedMessage) {
-      $timeout(function() { // $timeout used instead of $digest/$apply
-        var message = findMessageByName(changedMessage.name);
-        if(message) {
-          message.text = changedMessage.text;
-          message.user = changedMessage.user;
-        } else {
-          $scope.messages.push(changedMessage);
-        }
-      });
-    });
-
-    MessageService.childRemoved(function(deletedMessage) {
-      $timeout(function() { // $timeout used instead of $digest/$apply
-        deleteMessageByName(deletedMessage.name);
-      });
-    });
-
-    function findMessageByName(name) {
-      for(var i = 0; i < $scope.messages.length; i++) {
-        var currentMessage = $scope.messages[i];
-        if(name === currentMessage.name) {
-          return currentMessage;
-        }
-      }
-    }
-
-    function deleteMessageByName(name) {
-      for(var i = 0; i < $scope.messages.length; i++) {
-        var currentMessage = $scope.messages[i];
-        if(name === currentMessage.name) {
-          $scope.messages.splice(i, 1);
-          return;
-        }
-      }
-    }
-
-    $scope.sendMessage = function() {
-      MessageService.sendMessage({
+    $scope.sendMessage = function () {
+      var newMessage = {
         user: $scope.currentUser,
         text: $scope.currentText
-      });
+      };
+
+      MessageService.add(newMessage);
     };
 
-    $scope.turnFeedOff = function() {
+    $scope.turnFeedOff = function () {
       MessageService.off();
     };
 
-    $scope.pageNext = function() {
+    $scope.pageNext = function () {
       var lastItem = $scope.messages[$scope.messages.length - 1];
-      MessageService.pageNext(lastItem.name, 10).then(function(messages) {
+      MessageService.pageNext(lastItem.name, 10).then(function (messages) {
         $scope.messages = messages;
       });
     };
-    $scope.pageBack = function() {
+
+    $scope.pageBack = function () {
       var firstItem = $scope.messages[0];
-      MessageService.pageBack(firstItem.name, 10).then(function(messages) {
+      MessageService.pageBack(firstItem.name, 10).then(function (messages) {
         $scope.messages = messages;
       });
     };
+
   });

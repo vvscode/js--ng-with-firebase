@@ -1,67 +1,51 @@
-/* global Firebase */
-(function(angular) {
+/*global Firebase*/
+(function (angular) {
   'use strict';
 
-  angular.module('jsNgWithFirebaseApp').service('MessageService', function(FBURL, $q) {
-    var messagesRef = new Firebase(FBURL).child('messages');
-
-    function getSnapshotsMessage(snapshot){
-      var value = snapshot.val();
-      return {
-        text: value.text,
-        user: value.user,
-        name: snapshot.name()
-      };
-    }
-
+  angular.module('jsNgWithFirebaseApp').service('MessageService', function (FBURL, $q, $firebase) {
+    var messageRef = new Firebase(FBURL).child('messages');
+    var fireMessage = $firebase(messageRef);
     return {
       childAdded: function childAdded(limitNumber, cb) {
-        messagesRef.startAt().limit(limitNumber).on('child_added', function(snapshot){
-          cb.call(this, getSnapshotsMessage(snapshot));
+        messageRef.startAt().limit(limitNumber).on('child_added', function (snapshot) {
+          var val = snapshot.val();
+          cb.call(this, {
+            user: val.user,
+            text: val.text,
+            name: snapshot.name()
+          });
         });
       },
-
-      childChanged: function childChanged(cb) {
-        messagesRef.on('child_changed', function(snapshot){
-          cb.call(this, getSnapshotsMessage(snapshot));
-        });
+      add: function addMessage(message) {
+        messageRef.push(message);
       },
-
-      childRemoved: function childRemoved(cb) {
-        messagesRef.on('child_removed', function(snapshot){
-          cb.call(this, getSnapshotsMessage(snapshot));
-        });
+      off: function turnMessagesOff() {
+        messageRef.off();
       },
-
-      sendMessage: function(message) {
-        messagesRef.push(message);
-      },
-
-      off: function() {
-        messagesRef.off();
-      },
-
       pageNext: function pageNext(name, numberOfItems) {
         var deferred = $q.defer();
         var messages = [];
 
-        messagesRef.startAt(null, name).limit(numberOfItems).once('value', function(snapshot) {
-          snapshot.forEach(function(item) {
-            messages.push(getSnapshotsMessage(item));
+        messageRef.startAt(null, name).limit(numberOfItems).once('value', function (snapshot) {
+          snapshot.forEach(function (snapItem) {
+            var itemVal = snapItem.val();
+            itemVal.name = snapItem.name();
+            messages.push(itemVal);
           });
           deferred.resolve(messages);
         });
 
         return deferred.promise;
       },
-
       pageBack: function pageBack(name, numberOfItems) {
         var deferred = $q.defer();
         var messages = [];
 
-        messagesRef.endAt(null, name).limit(numberOfItems).once('value', function(snapshot) {
-          snapshot.forEach(function(item) {
-            messages.push(getSnapshotsMessage(item));
+        messageRef.endAt(null, name).limit(numberOfItems).once('value', function (snapshot) {
+          snapshot.forEach(function (snapItem) {
+            var itemVal = snapItem.val();
+            itemVal.name = snapItem.name();
+            messages.push(itemVal);
           });
           deferred.resolve(messages);
         });
@@ -70,4 +54,5 @@
       }
     };
   });
+
 })(window.angular);
