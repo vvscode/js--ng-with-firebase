@@ -30,4 +30,5 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  });
+  })
+  .constant('FBURL', 'https://intense-torch-8090.firebaseio.com/');
