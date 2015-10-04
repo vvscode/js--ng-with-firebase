@@ -13,13 +13,14 @@ angular.module('jsNgWithFirebaseApp')
     var rootRef = new Firebase('https://intense-torch-8090.firebaseio.com/');
     var messagesRef = rootRef.child('messages');
 
+    $scope.messages = [];
     $scope.currentUser = null;
     $scope.currentText = null;
 
-    messagesRef.on('value', function(snapshot) {
+    messagesRef.on('child_added', function(snapshot) {
       $timeout(function() { // $timeout used instead of $digest/$apply
         var value = snapshot.val();
-        $scope.messages = value;
+        $scope.messages.push(value);
       });
     });
 
