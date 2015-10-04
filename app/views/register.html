@@ -1,18 +1,29 @@
 <div class="jumbotron">
   <h2>Register</h2>
+
+  <div class="alert alert-danger" data-ng-repeat="error in errors">{{error}}</div>
   <div class="form-group">
     <label for="email">Email address</label>
-    <input type="email" id="email" class="form-control" placeholder="Enter email">
+    <input type="email"
+           id="email"
+           class="form-control"
+           placeholder="Enter email"
+           data-ng-model="registerUser.email">
   </div>
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" id="password" class="form-control" placeholder="Password">
+    <input type="password" id="password" class="form-control" placeholder="Password"
+           data-ng-model="registerUser.password">
   </div>
   <div class="form-group">
     <label for="passwordConfirm">Confirm password</label>
-    <input type="password" id="passwordConfirm" class="form-control" placeholder="Password confirm">
+    <input type="password"
+           id="passwordConfirm"
+           class="form-control"
+           placeholder="Password confirm"
+           data-ng-model="registerUser.confirmPassword">
   </div>
-  <button class="btn btn-primary">Register</button>
+  <button class="btn btn-primary" ng-click="registerNewUser()">Register</button>
 </div>
 
 <div class="row marketing">
